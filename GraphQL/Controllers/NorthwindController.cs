@@ -36,16 +36,22 @@ namespace GraphQL.Controllers
             //.ToArray();
         }
         [HttpGet("GetOrdersPaginated")]
-        public IActionResult GetOrdersPaginated(int pageNumber = 1, int pageSize = 10)
+        public IActionResult GetOrdersPaginated(int pageNumber = 1, int pageSize = 10, string user = "User")
         {
-            var query = _context.Orders
+            IQueryable<Order> query;
+            if (user == "Admin") // Check if user has admin role
+                query = _context.Orders;
+            else if (user == "User") // Check if user has user role
+                query = _context.Orders.Where(o => o.ShipVia == 1);
+            else
+                return Forbid(); // Return 403 Forbidden if user role is not recognized
+            query = query
                 .OrderBy(o => o.OrderDate)
                 .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+                .Take(pageSize);
 
-            return Ok(query);
-
+            var result = query.ToList();
+            return Ok(result);
         }
         [HttpGet("GetOrders")]
         public IActionResult GetOrders()
