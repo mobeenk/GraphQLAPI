@@ -51,6 +51,7 @@ namespace GraphQL.Controllers
                 .Take(pageSize);
 
             var result = query.ToList();
+            
             return Ok(result);
         }
         [HttpGet("GetOrders")]
