@@ -64,5 +64,24 @@ namespace GraphQL.Controllers
             return Ok(query);
 
         }
+        [HttpGet("GetLinq")]
+        public IActionResult GetLinq()
+        {
+
+            var query = from order in _context.Orders
+                        join orderDetail in _context.OrderDetails on order.OrderId equals orderDetail.OrderId into orderDetailsGroup
+                        from orderDetail in orderDetailsGroup.DefaultIfEmpty()
+                        join product in _context.Products on orderDetail.ProductId equals product.ProductId into productsGroup
+                        from product in productsGroup.DefaultIfEmpty()
+                        select new
+                        {
+                            Order = order,
+                            Product = product
+                        };
+
+
+            return Ok(query);
+
+        }
     }
 }
