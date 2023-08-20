@@ -65,7 +65,7 @@ namespace GraphQL.Controllers
 
         }
         [HttpGet("GetLinq")]
-        public IActionResult GetLinq()
+        public async Task<IActionResult> GetLinq()
         {
 
             var query = from order in _context.Orders
@@ -75,11 +75,14 @@ namespace GraphQL.Controllers
                         from product in productsGroup.DefaultIfEmpty()
                         select new
                         {
-                            Order = order,
-                            Product = product
+                            OrderID = order.OrderId,
+                            OrderDate = order.OrderDate,
+                            ShipVia = order.ShipVia,
+                            ProductID = product.ProductId,
+                            ProductName = product.ProductName
                         };
 
-
+            var result = await  query.ToListAsync();
             return Ok(query);
 
         }
