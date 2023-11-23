@@ -13,17 +13,19 @@ namespace GraphQL
             // Add services to the container.
 
             builder.Services.AddControllers();
-            builder.Services.AddDbContext<NorthwindContext>(options => 
-                    options.UseSqlServer("Server=localhost;Database=Northwind;Trusted_Connection=True;")
-            );
+            //builder.Services.AddDbContext<NorthwindContext>(options => 
+            //        options.UseSqlServer("Server=localhost;Database=Northwind;Trusted_Connection=True;")
+            //);
+            builder.Services.AddDbContext<ZyklusCoreContext>(options =>
+                  options.UseSqlServer("data source=SWD-SQLUAT-01;initial catalog=ZyklusCore;user id=ZyklusAdmin;password=Rf=z3m@N.nh]/e%M;MultipleActiveResultSets=True;")
+          );
+            
             builder.Services.AddGraphQLServer().AddQueryType<Query>().AddProjections().AddFiltering().AddSorting();
             //builder.Services.AddGraphQL().AddQueryType();
             var app = builder.Build();
-      
             // Configure the HTTP request pipeline.
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
 
 

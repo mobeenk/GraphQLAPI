@@ -15,6 +15,12 @@ namespace GraphQL.Queries
         [UseSorting]
         [UseFiltering]
         public IQueryable<Customer> GetCustomers([Service] NorthwindContext context) => context.Customers;
+
+        //Zylucs
+        [UseProjection]
+        [UseSorting]
+        [UseFiltering]
+        public IQueryable<RcmFacility> GetFacilities([Service] ZyklusCoreContext db) => db.RcmFacilities;
     }
 
 }
