@@ -1,10 +1,10 @@
 ﻿using GraphQL.Models;
-using GraphQL.Schema;
+using GraphQL.Repositories;
 
 namespace GraphQL.Queries
 {
 
-    public class Query
+    public class FacilityQueryTypes
     {
         [UseProjection]
         [UseSorting]
@@ -21,6 +21,12 @@ namespace GraphQL.Queries
         [UseSorting]
         [UseFiltering]
         public IQueryable<RcmFacility> GetFacilities([Service] ZyklusCoreContext db) => db.RcmFacilities;
+
+        //Slower
+        public async Task<List<RcmFacility>> GetFacilityListAsync([Service] IFacilityRepository productService)
+        {
+            return await productService.FacilityListAsync();
+        }
     }
 
 }

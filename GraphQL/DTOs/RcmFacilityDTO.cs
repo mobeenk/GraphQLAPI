@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace GraphQL.Models
+﻿namespace GraphQL.DTOs
 {
-    public partial class RcmFacility
+    public class RcmFacilityDTO
     {
-        public RcmFacility()
-        {
-            RcmClinics = new HashSet<RcmClinic>();
-        }
-
         public int FacilityId { get; set; }
         public int OrganizationId { get; set; }
         public int FacilityGroupId { get; set; }
@@ -30,9 +22,9 @@ namespace GraphQL.Models
         public string? TaxRegistrationNo { get; set; }
         public bool IsActive { get; set; }
         public int CreatedBy { get; set; }
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public int? ModifiedBy { get; set; }
-        public DateTime? ModifiedOn { get; set; }
+        public DateTime? ModifiedOn { get; set; } = DateTime.UtcNow;
         public string? ExternalCode { get; set; }
         public string? ClientName { get; set; }
         public byte[]? PasswordHash { get; set; }
@@ -68,9 +60,6 @@ namespace GraphQL.Models
         public string? FacilityAuthorizedPersonDesignationEn { get; set; }
         public string? DescriptionEn { get; set; }
         public string? DescriptionAr { get; set; }
-        public DateTime? RegisteredOn { get; set; }
-        
-        public virtual RcmFacilityGroup RcmFacilityGroup { get; set; } = null!;
-        public virtual ICollection<RcmClinic> RcmClinics { get; set; }
+        public DateTime? RegisteredOn { get; set; } = DateTime.UtcNow;
     }
 }

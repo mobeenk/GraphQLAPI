@@ -23,5 +23,12 @@ namespace GraphQL.Controllers
             var customers = await _context.RcmFacilities.ToListAsync();
             return customers;
         }
+
+        //[HttpGet("GetFacilities")]
+        //public async Task<List<RcmFacility>> GetFacilities()
+        //{
+        //    var customers = await _context.RcmFacilities.ToListAsync();
+        //    return customers;
+        //}
     }
 }
