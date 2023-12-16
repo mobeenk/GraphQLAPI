@@ -11,6 +11,16 @@ namespace GraphQL
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("http://localhost:4200")
+                           .AllowAnyHeader()
+                           .AllowAnyMethod();
+                    
+                });
+            });
 
             builder.Services.AddControllers();
             builder.Services.AddDbContext<NorthwindContext>(options => 
@@ -29,6 +39,7 @@ namespace GraphQL
 
             app.MapControllers();
             app.MapGraphQL();
+            app.UseCors();
             app.Run();
         }
     }

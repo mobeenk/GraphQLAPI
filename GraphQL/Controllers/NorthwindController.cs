@@ -35,22 +35,28 @@ namespace GraphQL.Controllers
             //})dw
             //.ToArray();
         }
+        [HttpGet("GetOrdersCount")]
+        public async Task<IActionResult> GetOrdersCount()
+        {
+            var result =await _context.Orders.CountAsync();
+            return Ok(result);
+        }
         [HttpGet("GetOrdersPaginated")]
-        public IActionResult GetOrdersPaginated(int pageNumber = 1, int pageSize = 10, string user = "User")
+        public async Task<IActionResult> GetOrdersPaginated(int pageNumber = 1, int pageSize = 10)
         {
             IQueryable<Order> query;
-            if (user == "Admin") // Check if user has admin role
-                query = _context.Orders;
-            else if (user == "User") // Check if user has user role
-                query = _context.Orders.Where(o => o.ShipVia == 1);
-            else
-                return Forbid(); // Return 403 Forbidden if user role is not recognized
+            //if (user == "Admin") // Check if user has admin role
+            query = _context.Orders;
+            //else if (user == "User") // Check if user has user role
+            //    query = _context.Orders.Where(o => o.ShipVia == 1);
+            //else
+            //    return Forbid(); // Return 403 Forbidden if user role is not recognized
             query = query
-                .OrderBy(o => o.OrderDate)
+                .OrderBy(o => o.OrderId)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize);
 
-            var result = query.ToList();
+            var result =await query.ToListAsync();
             
             return Ok(result);
         }
@@ -64,6 +70,22 @@ namespace GraphQL.Controllers
             return Ok(query);
 
         }
+        [HttpGet("GetTask1")]
+        public async Task<IActionResult> GetTask1()
+        {
+            await Task.Delay(5000);
+
+            return Ok(1);
+        }
+        [HttpGet("GetTask2")]
+        public async Task<IActionResult> GetTask2()
+        {
+            await Task.Delay(3000);
+
+            return Ok(2);
+        }
+
+
         [HttpGet("GetLinq")]
         public async Task<IActionResult> GetLinq()
         {
