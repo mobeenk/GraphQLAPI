@@ -1,4 +1,4 @@
-namespace GraphQL
+namespace OcelotGateway
 {
     public class WeatherForecast
     {
