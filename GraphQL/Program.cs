@@ -2,6 +2,7 @@ using GraphQL.Models;
 using GraphQL.MutationTypes;
 using GraphQL.Queries;
 using GraphQL.Repositories;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 
 namespace GraphQL
@@ -25,16 +26,19 @@ namespace GraphQL
             });
 
             builder.Services.AddControllers();
-            //builder.Services.AddDbContext<NorthwindContext>(options => 
-            //        options.UseSqlServer("Server=localhost;Database=Northwind;Trusted_Connection=True;")
-            //);
+            builder.Services.AddDbContext<NorthwindContext>(options =>
+                    options.UseSqlServer("Server=localhost;Database=Northwind;Trusted_Connection=True;")
+            );
+            builder.Services.AddScoped<IBackgroundJobService, BackgroundJobService>();
+            builder.Services.AddHangfire(x => x.UseSqlServerStorage("Server=localhost;Database=Northwind;Trusted_Connection=True;"));
+            builder.Services.AddHangfireServer();
             //Register Service
-            builder.Services.AddScoped<IFacilityRepository, FacilityRepository>();
+            //  builder.Services.AddScoped<IFacilityRepository, FacilityRepository>();
 
-            builder.Services.AddDbContext<ZyklusCoreContext>(options =>
-                  options.UseSqlServer("data source=SWD-SQLUAT-01;initial catalog=ZyklusCore;user id=ZyklusAdmin;password=Rf=z3m@N.nh]/e%M;MultipleActiveResultSets=True;")
-          );
-            
+            //  builder.Services.AddDbContext<ZyklusCoreContext>(options =>
+            //        options.UseSqlServer("data source=SWD-SQLUAT-01;initial catalog=ZyklusCore;user id=ZyklusAdmin;password=Rf=z3m@N.nh]/e%M;MultipleActiveResultSets=True;")
+            //);
+
 
             builder.Services.AddGraphQLServer()
                             .AddQueryType<FacilityQueryTypes>()
@@ -49,7 +53,7 @@ namespace GraphQL
 
             app.UseHttpsRedirection();
             app.UseAuthorization();
-
+            app.UseHangfireDashboard();
 
             app.MapControllers();
             app.MapGraphQL();

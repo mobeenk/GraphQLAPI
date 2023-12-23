@@ -1,4 +1,6 @@
 using GraphQL.Models;
+using GraphQL.Repositories;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,11 +17,17 @@ namespace GraphQL.Controllers
 
         private readonly ILogger<NorthwindController> _logger;
         private readonly NorthwindContext _context;
+        private readonly IBackgroundJobClient _hangFire;
 
-        public NorthwindController(ILogger<NorthwindController> logger, NorthwindContext context)
+        private readonly IBackgroundJobService _backgroundJobService;
+
+        public NorthwindController(ILogger<NorthwindController> logger, NorthwindContext context
+            , IBackgroundJobService backgroundJobService, IBackgroundJobClient backgroundJobClient)
         {
             _logger = logger;
             _context = context;
+            _backgroundJobService = backgroundJobService;
+            _hangFire = backgroundJobClient;
         }
 
         [HttpGet("GetCustomers")]
@@ -84,7 +92,22 @@ namespace GraphQL.Controllers
 
             return Ok(2);
         }
+        [HttpGet("TriggerLongQuery")]
+        public async Task<IActionResult> TriggerLongQuery()
+        {
+            // Enqueue the background job
+            var res = await _backgroundJobService.GetOrdersData();
 
+            return Ok(res.Count);
+        }
+        [HttpGet("trigger-job")]
+        public IActionResult TriggerJob()
+        {
+            // Enqueue the background job
+            _hangFire.Enqueue<IBackgroundJobService>(x => x.MyBackgroundJobAsync());
+
+            return Ok("Background job has been enqueued.");
+        }
 
         [HttpGet("GetLinq")]
         public async Task<IActionResult> GetLinq()
